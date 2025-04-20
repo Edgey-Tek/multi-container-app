@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
-const bodyParse = require('body-parser');
+const bodyParser = require('body-parser');
 const livereload = require('livereload');
 const connectLiveReload = require('connect-livereload');
-const app = require('express')();
+const express = require('express');
+const app = express();
 const moment = require('moment');
 const passport = require('./config/passport');
 const logger = require('./config/logger');
 const promClient = require('prom-client');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
@@ -22,13 +24,17 @@ liveReloadServer.server.once("connection", () => {
 // Fontend route
 const FrontRouter = require('./routes/front');
 const AuthRouter = require('./routes/auth');
+const ApiRouter = require('./routes/api');
 
 // Set ejs template engine
 app.set('view engine', 'ejs');
 
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(connectLiveReload())
 
-app.use(bodyParse.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.locals.moment = moment;
 
 // Initialize passport
@@ -53,6 +59,7 @@ app.get('/metrics', async (req, res) => {
 
 app.use(FrontRouter);
 app.use('/auth', AuthRouter);
+app.use('/api', ApiRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
