@@ -14,8 +14,16 @@ services:
       context: ./app
     depends_on:
       - todo-database
+      - prometheus
+      - grafana
+      - redis
     environment:
       NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET}
+      API_KEY: ${API_KEY}
+      API_SECRET: ${API_SECRET}
+      API_BASE_URL: ${API_BASE_URL}
+      LOG_LEVEL: ${LOG_LEVEL}
     ports:
       - 3000:3000
       - 35729:35729
@@ -33,6 +41,23 @@ services:
     #  - database:/data/db
     ports:
       - 27017:27017
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./app/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3001:3000
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
 
 #volumes:
   #database:

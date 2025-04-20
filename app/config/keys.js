@@ -1,3 +1,6 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 module.exports = {
-    mongoProdURI: 'mongodb://todo-database:27017/todoapp',
+    mongoProdURI: process.env.MONGO_URI,
 };
