@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+        <form id="todo-form">
+            <input type="text" id="new-todo" placeholder="Add a new todo">
+            <button type="submit">Add</button>
+        </form>
+        <ul id="todo-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('todo-form');
+            const input = document.getElementById('new-todo');
+            const list = document.getElementById('todo-list');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const task = input.value.trim();
+                if (task) {
+                    const li = document.createElement('li');
+                    li.textContent = task;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.addEventListener('click', function () {
+                        list.removeChild(li);
+                    });
+                    li.appendChild(deleteButton);
+                    list.appendChild(li);
+                    input.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
